@@ -1,3 +1,6 @@
+
+
+
 ####### IMPORTING LIBS
 import cv2
 import config
@@ -10,6 +13,7 @@ import numpy
 import RPi.GPIO as GPIO
 #used for time delays
 import time
+import crop ## crop library (autocropping)
 
 
 
@@ -47,7 +51,7 @@ stream = io.BytesIO()
 
 #### TO TAKE PICTURE WITH PI CAM
 with picamera.PiCamera() as camera:
-    camera.resolution = (92, 112)
+    camera.resolution = (640,480)
     camera.capture(stream, format='jpeg')
 
 
@@ -63,17 +67,22 @@ image = cv2.imdecode(buff, 1)
 
 
 
-
     
 #### CONVERT IMAGE TO GRAYSCALE
    
 image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 #cv2.imshow('image',image) 
 
+faces = crop.detect_single(image) # passinng captured image through face detection
 
 
-#### PASSING THE IMAGE TO MODEL 
-label, confidence = model.predict(image)
+cr = crop.crop(image,faces[0],faces[1],faces[2],faces[3]) # cropping the image to the size of face
+
+cr = crop.resize(cr) # resizing image for recognition
+
+
+#### recognition
+label, confidence = model.predict(cr)
 
 
 
@@ -119,16 +128,16 @@ if label == POSITIVE_LABEL and confidence < POSITIVE_THRESHOLD:
 	
 	print 'Recognized face!'
 	## OPENING THE LOCK
-	dutyCyclePercentage= lPos*100/msPerCycle
-	pwm.start(dutyCyclePercentage)
-	## WAITING FOR 7 SECONDS
-	time.sleep(7)
-	## CLOSING THE LOCK
-	dutyCyclePercentage= mPos*100/msPerCycle
-	pwm.start(dutyCyclePercentage)
-	time.sleep(1)
-	pwm.stop()
-	GPIO.cleanup()
+	#dutyCyclePercentage= lPos*100/msPerCycle
+	#pwm.start(dutyCyclePercentage)
+	### WAITING FOR 7 SECONDS
+	#time.sleep(7)
+	### CLOSING THE LOCK
+	#dutyCyclePercentage= mPos*100/msPerCycle
+	#pwm.start(dutyCyclePercentage)
+	#time.sleep(1)
+	#pwm.stop()
+	#GPIO.cleanup()
 
 	
 else:

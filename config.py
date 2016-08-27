@@ -1,9 +1,5 @@
-
-# Copyright 2013 Tony DiCola
-
-# this is little modified file from original
-
-## for original  goto https://github.com/tdicola/pi-facerec-box 
+# Raspberry Pi Face Recognition Treasure Box Configuration
+# Copyright 2013 Tony DiCola 
 
 # Edit the values below to configure the training and usage of the
 # face recognition box.
@@ -31,9 +27,9 @@
 # Start with a value of 3000, but you might need to tweak this value down if 
 # you're getting too many false positives (incorrectly recognized faces), or up
 # if too many false negatives (undetected faces).
-#POSITIVE_THRESHOLD = 7500
+POSITIVE_THRESHOLD = 7500
 # File to save and load face recognizer model.
-#TRAINING_FILE = 'training.xml'
+TRAINING_FILE = 'training.xml'
 
 # Directories which contain the positive and negative training image data.
 POSITIVE_DIR = './training/positive'
