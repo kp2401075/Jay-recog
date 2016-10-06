@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Raspberry Pi Face Recognition Treasure Box
 Face Recognition Training Script
 Copyright 2013 Tony DiCola 

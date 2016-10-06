@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import glob
 import os
 import sys
@@ -8,13 +9,15 @@ import io
 import picamera
 import numpy 
 import config
+import crop
+
 POSITIVE_FILE_PREFIX = 'positive_'
 
 ##### CAPTURE IMAGE WITH PICAM
 stream = io.BytesIO()
 
 with picamera.PiCamera() as camera:
-    camera.resolution = (92, 112)
+    camera.resolution = config.CAM_RES
     camera.capture(stream, format='jpeg')
     
     
@@ -37,9 +40,16 @@ face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade
 
 #### CHEKING FOR THE FACE AND LOCATING IT
 
+faces = crop.detect_single(image)
 
-faces = face_cascade.detectMultiScale(image, 1.1, 5)
 
+image = crop.crop(image,faces[0],faces[1],faces[2],faces[3])
+
+
+#cr = crop.resize(image)
+image = crop.resize(image)
+#faces = face_cascade.detectMultiScale(image, 1.1, 5)
+#image = crop.bright(cr)
 count = 0
 
 
